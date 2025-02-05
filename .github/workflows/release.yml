@@ -1,0 +1,32 @@
+name: Release SDK
+
+on:
+  push:
+    tags:
+      - 'v*'  # Triggers when a tag like v1.0.0 is pushed
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Set up JDK
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: 17
+
+      - name: Grant Execute Permission for Gradle
+        run: chmod +x gradlew
+
+      - name: Build SDK
+        run: ./gradlew mylibrary:assembleRelease
+
+      - name: Publish Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: mylibrary/build/outputs/aar/mylibrary-release.aar
+          token: ${{ secrets.GITHUB_TOKEN }}
