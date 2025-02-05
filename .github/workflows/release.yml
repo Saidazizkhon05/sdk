@@ -2,12 +2,8 @@ name: CI/CD - Build & Release SDK
 
 on:
   push:
-    branches:
-      - main
     tags:
-      - 'v*'  # Triggers when a tag like v1.0.0 is pushed
-
-  pull_request:
+      - 'v*'  # Only runs when a tag like v1.0.0 is pushed
 
 jobs:
   build:
@@ -28,9 +24,9 @@ jobs:
         run: chmod +x gradlew
 
       - name: Build SDK (.aar)
-        run: ./gradlew mylibrary:assembleRelease
+        run: ./gradlew mylibrary:clean mylibrary:assembleRelease
 
-      - name: Upload Build Artifact (For PRs)
+      - name: Upload Build Artifact
         uses: actions/upload-artifact@v4
         with:
           name: mylibrary-release.aar
@@ -39,7 +35,6 @@ jobs:
   release:
     name: Release SDK
     needs: build
-    if: startsWith(github.ref, 'refs/tags/v')  # Runs only when a tag like v1.0.0 is pushed
     runs-on: ubuntu-latest
     permissions:
       contents: write  # Required to push releases
@@ -58,7 +53,7 @@ jobs:
         run: chmod +x gradlew
 
       - name: Build SDK (.aar)
-        run: ./gradlew mylibrary:assembleRelease
+        run: ./gradlew mylibrary:clean mylibrary:assembleRelease
 
       - name: Publish Release
         uses: softprops/action-gh-release@v1
