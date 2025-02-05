@@ -29,4 +29,8 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           files: mylibrary/build/outputs/aar/mylibrary-release.aar
-          token: ${{ secrets.GITHUB_TOKEN }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+permissions:
+  contents: write
