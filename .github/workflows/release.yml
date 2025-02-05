@@ -3,11 +3,14 @@ name: Release SDK
 on:
   push:
     branches:
-      - main  # Adjust to your default branch if it's not 'main'
+      - main  # Adjust to your default branch if necessary
 
 jobs:
   build:
     runs-on: ubuntu-latest
+
+    permissions:
+      contents: write  # Grants access to push tags
 
     steps:
       - name: Checkout Code
@@ -28,6 +31,8 @@ jobs:
       - name: Create Git Tag
         run: |
           TAG="v$(date +'%Y.%m.%d.%H%M')"
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
           git tag $TAG
           git push origin $TAG
 
