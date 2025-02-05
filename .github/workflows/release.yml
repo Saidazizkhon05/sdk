@@ -29,8 +29,10 @@ jobs:
         run: ./gradlew mylibrary:assembleRelease
 
       - name: Create Git Tag
+        id: create_tag  # Assigning an ID to access the tag
         run: |
           TAG="v$(date +'%Y.%m.%d.%H%M')"
+          echo "TAG=$TAG" >> $GITHUB_ENV
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git tag $TAG
@@ -39,6 +41,7 @@ jobs:
       - name: Publish Release
         uses: softprops/action-gh-release@v1
         with:
+          tag_name: ${{ env.TAG }}  # Referencing the created tag
           files: mylibrary/build/outputs/aar/mylibrary-release.aar
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
