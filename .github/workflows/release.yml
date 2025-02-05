@@ -2,8 +2,8 @@ name: Release SDK
 
 on:
   push:
-    tags:
-      - 'v*'  # Triggers when a tag like v1.0.0 is pushed
+    branches:
+      - main  # Adjust to your default branch if it's not 'main'
 
 jobs:
   build:
@@ -25,12 +25,15 @@ jobs:
       - name: Build SDK
         run: ./gradlew mylibrary:assembleRelease
 
+      - name: Create Git Tag
+        run: |
+          TAG="v$(date +'%Y.%m.%d.%H%M')"
+          git tag $TAG
+          git push origin $TAG
+
       - name: Publish Release
         uses: softprops/action-gh-release@v1
         with:
           files: mylibrary/build/outputs/aar/mylibrary-release.aar
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-permissions:
-  contents: write
