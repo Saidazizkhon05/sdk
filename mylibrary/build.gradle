@@ -44,7 +44,7 @@ publishing {
     publications {
         register("release", MavenPublication){
             from components.findByName("release") ?: components.findByName("default")
-            groupId = "com.example.metrics"  // Change this to your package name
+            groupId = "com.github.Saidazizkhon05"  // Change this to your package name
             artifactId = "mylibrary"
             version = "1.0.0"
         }
