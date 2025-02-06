@@ -45,7 +45,7 @@ publishing {
         register("release", MavenPublication){
             from components.findByName("release") ?: components.findByName("default")
             groupId = "com.github.Saidazizkhon05"  // Change this to your package name
-            artifactId = "mylibrary"
+            artifactId = "sdk"
             version = "1.0.0"
         }
     }

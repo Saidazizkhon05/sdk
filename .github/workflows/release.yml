@@ -3,7 +3,7 @@ name: CI/CD - Build & Release SDK
 on:
   push:
     tags:
-      - 'v*'  # Only runs when a tag like v1.0.0 is pushed
+      - 'v*'  # Runs when a tag like v1.1.7 is pushed
 
 jobs:
   build:
@@ -23,8 +23,8 @@ jobs:
       - name: Grant Execute Permission for Gradle
         run: chmod +x gradlew
 
-      - name: Build SDK (.aar)
-        run: ./gradlew mylibrary:clean mylibrary:assembleRelease
+      - name: Build & Publish SDK
+        run: ./gradlew clean build publish
 
       - name: Upload Build Artifact
         uses: actions/upload-artifact@v4
@@ -37,7 +37,7 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     permissions:
-      contents: write  # Required to push releases
+      contents: write
 
     steps:
       - name: Checkout Code
@@ -58,7 +58,7 @@ jobs:
       - name: Publish Release
         uses: softprops/action-gh-release@v1
         with:
-          tag_name: ${{ github.ref_name }}  # Uses the pushed tag as release version
+          tag_name: ${{ github.ref_name }}
           files: mylibrary/build/outputs/aar/mylibrary-release.aar
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
