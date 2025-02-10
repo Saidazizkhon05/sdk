@@ -47,6 +47,9 @@ publishing {
             groupId = "com.github.Saidazizkhon05"  // Change this to your package name
             artifactId = "sdk"
             version = "1.0.0"
+            artifact("$buildDir/outputs/aar/mylibrary-release.aar") {
+                builtBy("assembleRelease")
+            }
         }
     }
 }
