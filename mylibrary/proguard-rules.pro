@@ -20,3 +20,5 @@
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
 -keep class com.example.mylibrary.** { *; }
+-keep class me.innerworks.iw_mobile_auth_android.** { *; }
+
