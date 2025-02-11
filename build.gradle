@@ -1,27 +1,30 @@
-// Top-level build file where you can add configuration options common to all sub-projects/modules.
-plugins {
-alias(libs.plugins.android.application) apply false
-    alias(libs.plugins.jetbrains.kotlin.android) apply false
-    alias(libs.plugins.android.library) apply false
-}// Project-level build.gradle.kts
+// Corrected build.gradle
 
-plugins {
-    alias(libs.plugins.android.application) apply false
-    alias(libs.plugins.jetbrains.kotlin.android) apply false
-    alias(libs.plugins.android.library) apply false
-}
-
+// Move the buildscript block to the top, before plugins block
 buildscript {
     repositories {
         google()
         mavenCentral()
         jcenter()
-        maven("https://jitpack.io") // Add JitPack repository
+        maven { url 'https://jitpack.io' }  // JitPack repository
     }
     dependencies {
-        // Make sure to apply the plugin for publishing
-        classpath("org.gradle.api.publish:gradle-publish-plugin:0.15.0")
+        classpath 'com.android.tools.build:gradle:7.0.2'  // Android Gradle Plugin
+        classpath 'org.gradle.api.publish:gradle-publish-plugin:0.15.0'  // Publish plugin
     }
+}
+
+plugins {
+    alias(libs.plugins.android.library) apply false  // Apply the library plugin if necessary
+    alias(libs.plugins.jetbrains.kotlin.android) apply false  // Apply Kotlin plugin if needed
+    alias(libs.plugins.android.application) apply false  // Apply the application plugin if needed
+}
+
+repositories {
+    google()
+    mavenCentral()
+    jcenter()
+    maven { url 'https://jitpack.io' }
 }
 
 allprojects {
@@ -29,6 +32,6 @@ allprojects {
         google()
         mavenCentral()
         jcenter()
-        maven("https://jitpack.io") // Add JitPack repository
+        maven { url 'https://jitpack.io' }
     }
 }
