@@ -3,4 +3,32 @@ plugins {
 alias(libs.plugins.android.application) apply false
     alias(libs.plugins.jetbrains.kotlin.android) apply false
     alias(libs.plugins.android.library) apply false
+}// Project-level build.gradle.kts
+
+plugins {
+    alias(libs.plugins.android.application) apply false
+    alias(libs.plugins.jetbrains.kotlin.android) apply false
+    alias(libs.plugins.android.library) apply false
+}
+
+buildscript {
+    repositories {
+        google()
+        mavenCentral()
+        jcenter()
+        maven("https://jitpack.io") // Add JitPack repository
+    }
+    dependencies {
+        // Make sure to apply the plugin for publishing
+        classpath("org.gradle.api.publish:gradle-publish-plugin:0.15.0")
+    }
+}
+
+allprojects {
+    repositories {
+        google()
+        mavenCentral()
+        jcenter()
+        maven("https://jitpack.io") // Add JitPack repository
+    }
 }

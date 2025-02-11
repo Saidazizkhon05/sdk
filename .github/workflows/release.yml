@@ -1,64 +1,48 @@
-name: CI/CD - Build & Release SDK
+name: Build and Publish AAR to JitPack
 
 on:
   push:
     tags:
-      - 'v*'  # Runs when a tag like v1.1.7 is pushed
+      - 'v*'  # Trigger on any tag starting with "v" (e.g., v1.0.0)
 
 jobs:
-  build:
-    name: Build SDK
+  build_and_publish:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout Code
-        uses: actions/checkout@v3
+      # Step 1: Checkout the repository
+      - name: Checkout code
+        uses: actions/checkout@v2
 
-      - name: Set up JDK
-        uses: actions/setup-java@v3
-        with:
-          distribution: 'temurin'
-          java-version: 17
-
-      - name: Grant Execute Permission for Gradle
-        run: chmod +x gradlew
-
-      - name: Build & Publish SDK
-        run: ./gradlew clean build publish
-
-      - name: Upload Build Artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: mylibrary-release.aar
-          path: mylibrary/build/outputs/aar/mylibrary-release.aar
-
-  release:
-    name: Release SDK
-    needs: build
-    runs-on: ubuntu-latest
-    permissions:
-      contents: write
-
-    steps:
-      - name: Checkout Code
-        uses: actions/checkout@v3
-
-      - name: Set up JDK
-        uses: actions/setup-java@v3
-        with:
-          distribution: 'temurin'
-          java-version: 17
-
-      - name: Grant Execute Permission for Gradle
-        run: chmod +x gradlew
-
-      - name: Build SDK (.aar)
-        run: ./gradlew mylibrary:clean mylibrary:assembleRelease --stacktrace --info
-
-      - name: Publish Release
-        uses: softprops/action-gh-release@v1
-        with:
-          tag_name: ${{ github.ref_name }}
-          files: mylibrary/build/outputs/aar/mylibrary-release.aar
+      # Step 2: Set up SSH key to clone private repositories (if required)
+      - name: Set up SSH key for Git operations
+        run: |
+          echo "$GIT_SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan github.com >> ~/.ssh/known_hosts
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GIT_SSH_PRIVATE_KEY: ${{ secrets.GIT_SSH_PRIVATE_KEY }}
+
+      # Step 3: Set up JDK 11 (required for Android Gradle builds)
+      - name: Set up JDK 11
+        uses: actions/setup-java@v2
+        with:
+          java-version: '11'
+
+      # Step 4: Build the .aar file
+      - name: Build .aar file
+        run: |
+          ./gradlew clean assembleRelease
+
+      # Step 5: Publish to JitPack
+      - name: Publish to JitPack
+        run: |
+          # Set the version dynamically from the tag
+          echo "version=${GITHUB_REF#refs/tags/}" >> gradle.properties
+          echo "group=com.github.Saidazizkhon05" >> gradle.properties
+          echo "archivesBaseName=sdk" >> gradle.properties
+          ./gradlew publish
+
+      # Step 6: Notify success
+      - name: Notify success
+        run: echo "Successfully built and published the .aar file to JitPack!"

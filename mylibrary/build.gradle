@@ -40,14 +40,32 @@ dependencies {
     androidTestImplementation libs.androidx.espresso.core
 }
 
+// publishing {
+//     publications {
+//         register("release", MavenPublication){
+//             from components.findByName("release") ?: components.findByName("default")
+//             groupId = "com.github.Saidazizkhon05"  // Change this to your package name
+//             artifactId = "sdk"
+//             version = "1.0.0"
+        
+//         }
+//     }
+// }
+
 publishing {
     publications {
-        register("release", MavenPublication){
-            from components.findByName("release") ?: components.findByName("default")
-            groupId = "com.github.Saidazizkhon05"  // Change this to your package name
-            artifactId = "sdk"
-            version = "1.0.0"
-        
+        create<MavenPublication>("aar") {
+            from(components["release"])  // Specifies the release component to be published
+
+            groupId = "com.github.Saidazizkhon05"  // Your GitHub username
+            artifactId = "sdk"  // Artifact name
+            version = project.version  // Use the version specified in the project or Git tag
+        }
+    }
+
+    repositories {
+        maven {
+            url = uri("https://jitpack.io")
         }
     }
 }
