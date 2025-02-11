@@ -8,10 +8,6 @@ buildscript {
         jcenter()
         maven { url 'https://jitpack.io' }  // JitPack repository
     }
-    dependencies {
-        classpath 'com.android.tools.build:gradle:7.0.2'  // Android Gradle Plugin
-        classpath 'org.gradle.api.publish:gradle-publish-plugin:0.15.0'  // Publish plugin
-    }
 }
 
 plugins {
