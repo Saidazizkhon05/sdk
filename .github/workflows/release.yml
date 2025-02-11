@@ -29,6 +29,7 @@ jobs:
         uses: actions/setup-java@v2
         with:
           java-version: '17'
+          distribution: 'temurin'  # You can use 'adoptopenjdk' instead of 'temurin'
 
       # Step 4: Build the .aar file
       - name: Build .aar file
