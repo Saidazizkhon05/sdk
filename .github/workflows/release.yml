@@ -17,9 +17,10 @@ jobs:
       # Step 2: Set up SSH key to clone private repositories (if required)
       - name: Set up SSH key for Git operations
         run: |
-          echo "$GIT_SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
-          chmod 600 ~/.ssh/id_rsa
-          ssh-keyscan github.com >> ~/.ssh/known_hosts
+          mkdir -p ~/.ssh  # Create the .ssh directory if it doesn't exist
+          echo "$GIT_SSH_PRIVATE_KEY" > ~/.ssh/id_rsa  # Write the private key to id_rsa
+          chmod 600 ~/.ssh/id_rsa  # Set the correct permissions for the private key
+          ssh-keyscan github.com >> ~/.ssh/known_hosts  # Add GitHub's SSH key to known_hosts
         env:
           GIT_SSH_PRIVATE_KEY: ${{ secrets.GIT_SSH_PRIVATE_KEY }}
 
@@ -45,4 +46,4 @@ jobs:
 
       # Step 6: Notify success
       - name: Notify success
-        run: echo "Successfully built and published the .aar file to JitPack!"
+        run: echo "Successfully built and published the .aar file to JitPack!" 
